@@ -1,15 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
+import moment from 'moment';
 import { client } from '../utils/sanityClient';
 import Head from '../components/head';
 import Nav from '../components/nav';
 
 const Albums = ({ albums }) => {
-  console.log(typeof albums);
   console.log(albums);
   return (
     <div>
-      <Head title="Artists" />
+      <Head title="Albums" />
       <Nav />
 
       <div className="hero">
@@ -20,6 +20,16 @@ const Albums = ({ albums }) => {
               <Link href="/albums" key={album._id}>
                 <a className="card">
                   <h3>{album.title}</h3>
+                  {album.releaseDate && <p>{moment(album.releaseDate).format('YYYY')}</p>}
+                  {album.songs &&
+                    <ul>
+                      {
+                        album.songs.map(song => (
+                          <li>{song.title}</li>
+                        ))
+                      }
+                    </ul>
+                  }
                 </a>
               </Link>
             ))
@@ -79,7 +89,7 @@ const Albums = ({ albums }) => {
 
 Albums.getInitialProps = () => {
   return client.fetch(
-    '*[_type == $type]',
+    '*[_type == $type]{_id, title, releaseDate, songs[]->}',
     { type: 'album' }
   ).then(res => {
     return { albums: res }

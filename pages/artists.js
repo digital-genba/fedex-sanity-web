@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import moment from 'moment';
 import { client, urlFor } from '../utils/sanityClient';
 import Head from '../components/head';
 import Nav from '../components/nav';
@@ -24,6 +25,11 @@ const Artists = ({ artists }) => {
                       <hr />
                       <img src={urlFor(artist.image).width(200).height(200).url()} />
                     </>
+                  }
+                  {
+                    artist.albums.map(album => (
+                      album.releaseDate && album.title && <p><b>{moment(album.releaseDate).format('YYYY')}</b> - {album.title}</p>
+                    ))
                   }
                 </a>
               </Link>
@@ -84,8 +90,7 @@ const Artists = ({ artists }) => {
 
 Artists.getInitialProps = () => {
   return client.fetch(
-    '*[_type == $type]',
-    { type: 'artist' }
+    `*[_type == 'artist']{_id, name, image, albums[]->}`,
   ).then(res => {
     return { artists: res }
   })

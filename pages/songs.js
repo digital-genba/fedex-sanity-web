@@ -19,7 +19,12 @@ const Songs = ({ songs }) => {
               <Link href="/songs" key={song._id}>
                 <a className="card">
                   <h3>{song.title}</h3>
-                  <p>{song.artist.name}</p>
+                  {song.albumTitle &&
+                    <p><b>{song.albumTitle}</b></p>
+                  }
+                  {song.artist &&
+                    <p>{song.artist.name}</p>
+                  }
                 </a>
               </Link>
             ))
@@ -79,7 +84,7 @@ const Songs = ({ songs }) => {
 
 Songs.getInitialProps = () => {
   return client.fetch(
-    '*[_type == $type]',
+    '*[_type == $type]{_id, title, "albumTitle": album->title, artist->}',
     { type: 'song' }
   ).then(res => {
     return { songs: res }
