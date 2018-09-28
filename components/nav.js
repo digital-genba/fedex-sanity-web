@@ -16,15 +16,6 @@ const Nav = () => (
           <a>Home</a>
         </Link>
       </li>
-      <ul>
-        {links.map(({ key, href, label }) => (
-          <li key={key}>
-            <Link href={href}>
-              <a>{label}</a>
-            </Link>
-          </li>
-        ))}
-      </ul>
     </ul>
 
     <style jsx>{`

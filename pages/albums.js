@@ -1,40 +1,33 @@
-import React from 'react'
-import Link from 'next/link'
-import Head from '../components/head'
-import Nav from '../components/nav'
+import React from 'react';
+import Link from 'next/link';
+import { client } from '../utils/sanityClient';
+import Head from '../components/head';
+import Nav from '../components/nav';
 
-const Home = () => (
-  <div>
-    <Head title="Home" />
-    <Nav />
+const Albums = ({ albums }) => {
+  console.log(typeof albums);
+  console.log(albums);
+  return (
+    <div>
+      <Head title="Artists" />
+      <Nav />
 
-    <div className="hero">
+      <div className="hero">
 
-      <div className="row">
-        <Link href="/artists">
-          <a className="card">
-            <h3>Artists</h3>
-            <p>Browse artists</p>
-          </a>
-        </Link>
-        <Link href="/albums">
-          <a className="card">
-            <h3>Albums</h3>
-            <p>
-              Browse albums
-            </p>
-          </a>
-        </Link>
-        <Link href="/songs">
-          <a className="card">
-            <h3>Songs</h3>
-            <p>Browse songs</p>
-          </a>
-        </Link>
+        <div className="row">
+          {
+            albums.map(album => (
+              <Link href="/albums" key={album._id}>
+                <a className="card">
+                  <h3>{album.title}</h3>
+                </a>
+              </Link>
+            ))
+          }
+        </div>
       </div>
-    </div>
 
-    <style jsx>{`
+      <style jsx>{`
       .hero {
         width: 100%;
         color: #333;
@@ -80,7 +73,17 @@ const Home = () => (
         color: #333;
       }
     `}</style>
-  </div>
-)
+    </div>
+  )
+};
 
-export default Home
+Albums.getInitialProps = () => {
+  return client.fetch(
+    '*[_type == $type]',
+    { type: 'album' }
+  ).then(res => {
+    return { albums: res }
+  })
+}
+
+export default Albums;

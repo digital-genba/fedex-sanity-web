@@ -6,8 +6,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@sanity/client": "^0.134.0",
+    "@sanity/image-url": "^0.134.0",
     "next": "7.0.0",
     "react": "16.5.2",
-    "react-dom": "16.5.2"
+    "react-dom": "16.5.2",
+    "recompose": "^0.30.0"
   }
 }
